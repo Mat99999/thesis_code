@@ -5,7 +5,7 @@
 
 > This repository contains the complete replication code, data
 > processing pipelines, and analytical datasets used to generate the
-> findings for the Master's thesis on the causal impact of foreign aid.
+> findings for my Master's thesis.
 
 ## 1. Abstract
 
