@@ -48,20 +48,17 @@ the `Data/Archive_enriched/` directory. These files integrate high-precision geo
 
 To ensure robustness, the analysis included the following covariates in separate DiD runs:
 
-1.  **`log_avg_pop_dens`**: Log of average population density (Proxy for
-    urbanization/demand).
+1.  **`log_avg_pop_dens`**: Log of average population density at the local level, serving as a proxy for urbanization.
 
-2.  **`log_3yr_pre_conflict_deaths`**: Log of conflict-related deaths in the previous 3 years (UCDP data). 
+2.  **`log_3yr_pre_conflict_deaths`**: Log of battle related deaths (from UCDP) in the surrounding administrative region during the previous three years, capturing exposure to violence and donor responsiveness to instability. 
 
-3.  **`log_disasters`**: Log count of natural disasters.
+3.  **`log_disasters`**: Log count of natural disasters (e.g., floods, droughts).
 
-4.  **`election_year`**: Binary indicator for national election years
-    (1 if a national election occurred, 0 otherwise).
+4.  **`election_year`**: A binary indicator of whether a national executive election occurred in the pre-project period, capturing political cycles and potential strategic allocation of aid.
 
-5.  **`political_stability`**: World Bank Governance Indicator
-    (Perceptions of political stability/violence).
+5.  **`political_stability`**: A World Bank Governance Indicator measuring perceptions of political stability and absence of violence.
 
-6.  **`leader_birthplace`**: Binary indicator (1 if the cluster is in the national leader's home region).
+6.  **`leader_birthplace`**: A Binary indicator (1 if the cluster is in the national leader's home region) for whether a neighborhood lies within the executive leader’s home region, included to adjust for documented political capture and favoritism in aid distribution.
 
 ### Panel Structure
 
