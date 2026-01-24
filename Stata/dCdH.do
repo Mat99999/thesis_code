@@ -25,7 +25,7 @@ ssc install fs, replace
 ssc install estout, replace
 
 * --- STEP 2: Sector name lookup ---------------------------
-import delimited "/Users/ma/Desktop/Master Thesis/didpipeline/data/interim/sector_group_names.csv", clear
+import delimited "`base_path'/Data/Archive_enriched/sector_group_names.csv", clear
 forvalues i = 1/`=_N' {
     global sector_`=ad_sector_codes[`i']' "`=ad_sector_names[`i']'"
 }
