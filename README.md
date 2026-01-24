@@ -114,13 +114,13 @@ thesis_code/
 
 ### Key Output Files
 
-| Model | Output File | Description |
+| Object | Output File | Description |
 |-------|-------------|-------------|
-| dCdH (Stata, no cov) | `Stata/dcdh_results/dcdh_combined_all_panels.csv` | 23 panels |
-| dCdH (R, with cov) | `output/dCdH/dcdh_results.csv` | 23 panels |
-| TWFE (no cov) | `output/TWFE/without_covariates/twfe_combined_all_panels.csv` | 115 rows |
-| TWFE (with cov) | `output/TWFE/with_covariates/twfe_with_cov_combined_all_panels.csv` | 115 rows |
-| Tables | `R/Plots and Tables/Output/*.html` | Tables 1-4, A1-A7 |
+| dCdH  | `Stata/dcdh_results/dcdh_combined_all_panels.csv` | (Stata, no cov) |
+| dCdH  | `output/dCdH/dcdh_results.csv` |  |
+| TWFE (no cov) | `output/TWFE/without_covariates/twfe_combined_all_panels.csv` | (R, no cov) |
+| TWFE (with cov) | `output/TWFE/with_covariates/twfe_with_cov_combined_all_panels.csv` | (R, with cov) |
+| Tables | `R/Plots and Tables/Output/*.html` | Plots and Tables |
 
 ## 4. Methodology & Workflow
 
@@ -130,8 +130,8 @@ The analysis follows a reproducible pipeline, including robustness checks.
 
 **Script:** `Stata/dCdH.do`
 
--   **Purpose:** Runs the primary robust causal model.
--   **Details:** Loops through all 23 enriched panel datasets and applies the dCdH estimator without covariates.
+-   **Purpose:** Runs the dCdH DiD model without covariates.
+-   **Details:** Loops through all panel datasets and applies the dCdH estimator without covariates.
 -   **Output:** Combined results in `Stata/dcdh_results/dcdh_combined_all_panels.csv`
 
 ### Step 2: TWFE and dCdH with Covariates (R)
@@ -144,7 +144,7 @@ hold when controlling for the 6 covariates.
     -   `R/TWFE/TWFE_with_covariates.R`: TWFE with 6 covariates
 
 -   **dCdH (Robustness):**
-    -   `R/dCdH/dcdh_with_covariates.R`: Robust dCdH estimator with covariates using `DIDmultiplegtDYN`
+    -   `R/dCdH/dcdh_with_covariates.R`: dCdH estimator with 6 covariates using `DIDmultiplegtDYN`
 
 ### Step 3: Spatial Robustness (R)
 
@@ -152,7 +152,7 @@ hold when controlling for the 6 covariates.
 
 -   **Purpose:** Provides additional diagnostic checks for spatial spillovers in the context of the thesis.
 -   **Diagnostic Tests:**
-    1.  **Distance-Based Dose-Response:** Tests if wealth gradients fade with distance from projects
+    1.  **Distance-Based Dose-Response:** Tests if IWI gradients fade with distance from projects
     2.  **Exclusion Buffer:** Re-estimates effects while removing control units within 10-30km of treated sites
     3.  **Moran's I:** Tests for spatial autocorrelation in model residuals
 
@@ -161,7 +161,7 @@ hold when controlling for the 6 covariates.
 **Scripts:** `R/Plots and Tables/`
 
 -   **`THESISTABLES.R`**: Uses `gt` package to create HTML summary tables (Tables 1-4, A1-A7)
--   **`plotandtables.R`**: Generates visualizations (Coverage Map, IWI Distribution, Event-Study comparisons)
+-   **`plotandtables.R`**: Generates visualizations and tables
 -   **Output Location:** `R/Plots and Tables/Output/`
 
 ## 5. Installation & Requirements
