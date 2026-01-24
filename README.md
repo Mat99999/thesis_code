@@ -7,7 +7,7 @@
 > processing pipelines, and analytical datasets used to generate the
 > findings for my Master's thesis.
 
-## 1. Abstract
+## 1. About
 
 ### Context
 
@@ -22,8 +22,7 @@ development aid to the continent.
 ### Methodology
 
 The study overcomes the scarcity of local economic data by
-leveraging satellite-derived International Wealth Index (IWI) estimates
-to construct a high-resolution longitudinal panel. To estimate causal
+leveraging satellite-derived International Wealth Index (IWI) estimates, provided in tabular form at the DHS-cluster level, to construct a high-resolution longitudinal panel. To estimate causal
 effects, the analysis employs a Difference-in-Differences (DiD)
 framework. Crucially, it contrasts the conventional Two-Way Fixed
 Effects (TWFE) model with the robust de Chaisemartin & d'Haultfoeuille
@@ -33,16 +32,12 @@ timing and heterogeneous effects.
 ## 2. Data Description
 
 The analysis relies on panel datasets located in
-the `Data/Archive_enriched/` directory. These files integrate
-high-precision geocoded aid data with satellite-based wealth measures
-and contextual covariates.
+the `Data/Archive_enriched/` directory. These files integrate high-precision geocoded aid data with satellite-based wealth measures and contextual covariates at the DHS-cluster level, where each DHS cluster is interpreted as representing a neighborhood.
 
 ### Input Data
 
 -   **Treatment:** Geocoded aid projects from **AidData** (World Bank
-    v1.4.2 and Global Chinese Development Finance v1.1.1). Only projects
-    with precision codes 1-3 (exact location or within ADM2) were
-    included to ensure local relevance.
+    v1.4.2 and Global Chinese Development Finance v1.1.1). Only projects with precision codes 1–3 (exact locations, buffered locations, or administrative-level centroids) were included to ensure that treatment exposure can be meaningfully defined at the same local neighborhood scale as the satellite-derived wealth outcome.
 
 -   **Outcome:** The **International Wealth Index (IWI)**, a continuous
     asset-based measure of household wealth (0-100) derived from
@@ -51,8 +46,7 @@ and contextual covariates.
 
 ### Covariates
 
-To ensure robustness, the datasets include time-varying and
-pre-treatment controls:
+To ensure robustness, the analysis included the following covariates in separate DiD runs:
 
 1.  **`log_avg_pop_dens`**: Log of average population density (Proxy for
     urbanization/demand).
@@ -156,7 +150,7 @@ hold when controlling for the 6 covariates.
 
 **Script:** `R/Robustness/Robustness.R`
 
--   **Purpose:** Validates that findings are not driven by spatial spillovers.
+-   **Purpose:** Provides additional diagnostic checks for spatial spillovers in the context of the thesis.
 -   **Diagnostic Tests:**
     1.  **Distance-Based Dose-Response:** Tests if wealth gradients fade with distance from projects
     2.  **Exclusion Buffer:** Re-estimates effects while removing control units within 10-30km of treated sites
