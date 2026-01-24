@@ -123,7 +123,7 @@ thesis_code/
 
 The analysis follows a reproducible pipeline, including robustness checks.
 
-### Step 1: Baseline Estimation (Stata)
+### Step 1: dCdH DiD run without covariates (Stata).
 
 **Script:** `Stata/dCdH.do`
 
