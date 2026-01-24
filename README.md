@@ -199,7 +199,7 @@ ssc install fs, replace
 
 To reproduce the thesis results, recommended execution order:
 
-1.  **Run Baseline Models (Stata):**
+1.  **Run dCdH Baseline (Stata):**
     -   Open `Stata/dCdH.do` and execute
 
 2.  **Run TWFE & Diagnostics (R):**
