@@ -214,4 +214,4 @@ To reproduce the thesis results, recommended execution order:
 
 5.  **Compile Final Outputs (R):**
     -   Run `R/Plots and Tables/THESISTABLES.R` to generate tables
-    -   Run `R/Plots and Tables/plotandtables.R` to generate figures
+    -   Run `R/Plots and Tables/plotandtables.R` to generate figures and additional tables
