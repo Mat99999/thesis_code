@@ -24,20 +24,20 @@ development aid to the continent.
 The study overcomes the scarcity of local economic data by
 leveraging satellite-derived International Wealth Index (IWI) estimates, provided in tabular form at the DHS-cluster level, to construct a high-resolution longitudinal panel. To estimate causal
 effects, the analysis employs a Difference-in-Differences (DiD)
-framework. Crucially, it contrasts the conventional Two-Way Fixed
-Effects (TWFE) model with the robust de Chaisemartin & d'Haultfoeuille
+framework. It contrasts the conventional Two-Way Fixed
+Effects (TWFE) model with the more robust de Chaisemartin & d'Haultfoeuille
 (dCdH) estimator to correct for biases introduced by staggered treatment
 timing and heterogeneous effects.
 
 ## 2. Data Description
 
 The analysis relies on panel datasets located in
-the `Data/Archive_enriched/` directory. These files integrate high-precision geocoded aid data with satellite-based wealth measures and contextual covariates at the DHS-cluster level, where each DHS cluster is interpreted as representing a neighborhood.
+the `Data/Archive_enriched/` directory. These files integrate high-precision geocoded aid data with satellite-based IWI wealth measures and contextual covariates at the DHS-cluster level, where each DHS cluster is interpreted as representing a neighborhood.
 
 ### Input Data
 
 -   **Treatment:** Geocoded aid projects from **AidData** (World Bank
-    v1.4.2 and Global Chinese Development Finance v1.1.1). Only projects with precision codes 1–3 (exact locations, buffered locations, or administrative-level centroids) were included to ensure that treatment exposure can be meaningfully defined at the same local neighborhood scale as the satellite-derived wealth outcome.
+    v1.4.2 and Global Chinese Development Finance v1.1.1). Only projects with precision codes 1-3 (exact locations, buffered locations, or administrative-level centroids) were included to ensure that treatment exposure can be meaningfully defined at the same local neighborhood scale as the satellite-derived IWI wealth outcome.
 
 -   **Outcome:** The **International Wealth Index (IWI)**, a continuous
     asset-based measure of household wealth (0-100) derived from
