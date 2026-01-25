@@ -214,7 +214,7 @@ cat("   PHASE 2: PARALLEL TRENDS DIAGNOSTIC (Old vs New)\n")
 cat("================================================================\n")
 
 # Path to the definitive old file
-definitive_old_file <- here::here("output", "TWFE", "tables", "paralelltrends", "Table_TWFE_Parallel_Trends_Test.csv")
+definitive_old_file <- here::here("output", "TWFE", "tables", "Table_TWFE_Parallel_Trends_Test.csv")
 
 if (file.exists(definitive_old_file)) {
   # 1. Load Definitive Old Results
