@@ -537,8 +537,8 @@ library(tidyverse)
 library(readr)
 
 # ---- Paths --------------------------------------------------------------------
-table_path <- "/Users/ma/Downloads/analysis/tables"
-plot_path <- "/Users/ma/Downloads/analysis/plots"
+table_path <- here::here("output", "tables")
+plot_path <- here::here("output", "plots")
 dir.create(table_path, recursive = TRUE, showWarnings = FALSE)
 dir.create(plot_path, recursive = TRUE, showWarnings = FALSE)
 
@@ -662,10 +662,10 @@ library(janitor)
 library(readr)
 
 # ---- Paths --------------------------------------------------------------------
-data_path <- "/Users/ma/Downloads/Archive_enriched"
-plot_path <- "/Users/ma/Downloads/analysis/plots"
-table_path <- "/Users/ma/Downloads/analysis/tables"
-sector_map_path <- "/Users/ma/Desktop/Master Thesis/didpipeline/data/interim/sector_group_names.csv"
+data_path <- here::here("Data", "Archive_enriched")
+plot_path <- here::here("output", "plots")
+table_path <- here::here("output", "tables")
+sector_map_path <- here::here("Data", "Archive_enriched", "sector_group_names.csv")
 
 dir.create(plot_path, recursive = TRUE, showWarnings = FALSE)
 dir.create(table_path, recursive = TRUE, showWarnings = FALSE)
@@ -852,7 +852,7 @@ ggplot(
 # This code assumes the 'plot_data' dataframe from the previous step is loaded.
 
 # --- Define save path for the main faceted plot ---
-plots_save_path <- "/Users/ma/Downloads/analysis/plots"
+plots_save_path <- here::here("output", "plots")
 dir.create(plots_save_path, showWarnings = FALSE)
 
 # --- Create the plot object with the crucial 'scales = "free_y"' addition ---
@@ -902,9 +902,9 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, stringr)
 
 # --- Define paths to your data ---
-dcdh_results_path <- "/Users/ma/Downloads/analysis/dCdH/dcdhtables/"
-sector_lookup_path <- "/Users/ma/Desktop/Master Thesis/didpipeline/data/interim/sector_group_names.csv"
-plots_save_path <- "/Users/ma/Downloads/analysis/plots" # General plot save folder
+dcdh_results_path <- here::here("Stata", "dcdh_results")
+sector_lookup_path <- here::here("Data", "Archive_enriched", "sector_group_names.csv")
+plots_save_path <- here::here("output", "plots") # General plot save folder
 
 # Ensure the save directory exists
 dir.create(plots_save_path, showWarnings = FALSE)
@@ -1028,12 +1028,12 @@ if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load(tidyverse, sf, rnaturalearth)
 
 # --- Define save path ---
-save_path <- "/Users/ma/Downloads/analysis/spillover"
+save_path <- here::here("output", "spillover")
 # Ensure the directory exists (it should, but good practice)
 dir.create(save_path, showWarnings = FALSE)
 
 # --- Re-run the main model to get residuals ---
-files <- list.files("/Users/ma/Downloads/Archive_enriched", pattern = "enriched\\.csv$", full.names = TRUE)
+files <- list.files(here::here("Data", "Archive_enriched"), pattern = "enriched\\.csv$", full.names = TRUE)
 raw <- map_dfr(files, ~ read_csv(.x, show_col_types = FALSE) %>% janitor::clean_names())
 unit_level <- raw %>%
   group_by(iso3, adm2) %>%
@@ -1173,10 +1173,10 @@ p_twfe_robustness_final <- ggplot(twfe_comp_clean, aes(x = time, y = estimate, c
 
 # 3. Save the Plot
 # Creating directory if it doesn't exist just in case
-if (!dir.exists("/Users/ma/Downloads/analysis/plots")) dir.create("/Users/ma/Downloads/analysis/plots", recursive = TRUE)
+if (!dir.exists(here::here("output", "plots"))) dir.create(here::here("output", "plots"), recursive = TRUE)
 
 ggsave(
-  filename = "/Users/ma/Downloads/analysis/plots/TWFE_Comparison_Final_Thesis.png",
+  filename = here::here("output", "plots", "TWFE_Comparison_Final_Thesis.png"),
   plot = p_twfe_robustness_final,
   width = 16,
   height = 12,
@@ -1186,7 +1186,7 @@ ggsave(
 # Show the plot
 print(p_twfe_robustness_final)
 
-cat("\n[OK] SUCCESS: Final TWFE Comparison plot saved to /Users/ma/Downloads/analysis/plots/\n")
+cat("\n[OK] SUCCESS: Final TWFE Comparison plot saved to output/plots/\n")
 
 ################################################################################
 # dCdH ROBUSTNESS COMPARISON: Final Thesis Version
@@ -1195,8 +1195,8 @@ cat("\n[OK] SUCCESS: Final TWFE Comparison plot saved to /Users/ma/Downloads/ana
 pacman::p_load(tidyverse, janitor, stringr)
 
 # --- 1. LOAD AND PREP ADJUSTED DATA (WIDE -> LONG) ---
-dcdh_adj_path <- "/Users/ma/Downloads/analysis/dCdH/tables/dCdH_Full_Stats_Wide.csv"
-sector_lookup <- read_csv("/Users/ma/Desktop/Master Thesis/didpipeline/data/interim/sector_group_names.csv", show_col_types = FALSE) %>%
+dcdh_adj_path <- here::here("output", "dCdH", "dCdH_Full_Stats_Wide.csv")
+sector_lookup <- read_csv(here::here("Data", "Archive_enriched", "sector_group_names.csv"), show_col_types = FALSE) %>%
   clean_names()
 
 dcdh_adj_long <- read_csv(dcdh_adj_path, show_col_types = FALSE) %>%
@@ -1219,7 +1219,7 @@ dcdh_adj_long <- read_csv(dcdh_adj_path, show_col_types = FALSE) %>%
   select(funder, ad_sector_names, time, estimate, conf_low, conf_high, model)
 
 # --- 2. LOAD AND PREP BASELINE DATA (PARSING STRINGS) ---
-baseline_dir <- "/Users/ma/Downloads/analysis/dCdH/dcdhtables"
+baseline_dir <- here::here("Stata", "dcdh_results")
 baseline_files <- list.files(baseline_dir, pattern = "\\.csv$", full.names = TRUE)
 
 dcdh_base_list <- list()
@@ -1324,10 +1324,10 @@ p_dcdh_comparison_final <- ggplot(dcdh_comp_final, aes(x = time, y = estimate, c
 
 # --- 5. SAVE ---
 # Create directory if it doesn't exist
-if (!dir.exists("/Users/ma/Downloads/analysis/plots")) dir.create("/Users/ma/Downloads/analysis/plots", recursive = TRUE)
+if (!dir.exists(here::here("output", "plots"))) dir.create(here::here("output", "plots"), recursive = TRUE)
 
 ggsave(
-  filename = "/Users/ma/Downloads/analysis/plots/dCdH_Comparison_Final_Thesis.png",
+  filename = here::here("output", "plots", "dCdH_Comparison_Final_Thesis.png"),
   plot = p_dcdh_comparison_final,
   width = 16,
   height = 12,
@@ -1337,4 +1337,4 @@ ggsave(
 # Show the plot
 print(p_dcdh_comparison_final)
 
-cat("\n[OK] SUCCESS: Final dCdH Comparison plot saved to /Users/ma/Downloads/analysis/plots/\n")
+cat("\n[OK] SUCCESS: Final dCdH Comparison plot saved to output/plots/\n")
