@@ -363,7 +363,7 @@ read_dcdh <- function(f) {
 
 # ---- Read & Combine -----------------------------------------------------------
 files_twfe <- list.files(path_twfe, pattern = "\\.csv$", full.names = TRUE)
-files_dcdh <- list.files(path_dcdh, pattern = "\\.csv$", full.names = TRUE)
+files_dcdh <- list.files(path_dcdh, pattern = "^DiD_Table_.*\\.csv$", full.names = TRUE)
 
 twfe_all <- bind_rows(lapply(files_twfe, read_twfe))
 dcdh_all <- bind_rows(lapply(files_dcdh, read_dcdh))
