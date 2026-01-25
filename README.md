@@ -79,23 +79,23 @@ analytical workflow: Input, Estimation, Robustness, and Synthesis.
 ```
 thesis_code/
 ├── Data/
-│   └── Archive_enriched/              # 23 enriched panel datasets
+│   └── Archive_enriched/              # 23 panel datasets
 │       ├── InputData_{funder}_{sector}_DiD_enriched.csv (×23)
 │       └── sector_group_names.csv     # Sector code lookup
 ├── R/
 │   ├── TWFE/                          # Two-Way Fixed Effects models
 │   │   ├── TWFE.R                     # Baseline (no covariates)
-│   │   └── TWFE_with_covariates.R     # With 6 covariates
+│   │   └── TWFE_with_covariates.R     # With covariates
 │   ├── dCdH/
-│   │   └── dcdh_with_covariates.R     # Robust dCdH estimator (with covariates)
+│   │   └── dcdh_with_covariates.R     # dCdH estimator (with covariates)
 │   ├── Robustness/
 │   │   └── Robustness.R               # Spatial spillover checks
 │   └── Plots and Tables/
-│       ├── THESISTABLES.R             # Generate HTML tables
-│       ├── plotandtables.R            # Generate figures
-│       └── Output/                    # Final HTML tables (Tables 1-4, A1-A7)
+│       ├── THESISTABLES.R             # Generate tables (HTML)
+│       ├── plotandtables.R            # Generate figures and additional tables
+│       └── Output/                    # Tables 
 ├── Stata/
-│   ├── dCdH.do                        # Baseline dCdH (no covariates)
+│   ├── dCdH.do                        # Baseline dCdH in STATA (no covariates)
 │   └── dcdh_results/
 │       ├── DiD_Table_{funder}_{sector}.csv (×23)  # Individual panel results
 │       └── dcdh_combined_all_panels.csv           # Combined Stata results
@@ -105,12 +105,12 @@ thesis_code/
     │   └── dcdh_no_covariates_results.csv # R dCdH without covariates
     ├── TWFE/
     │   ├── without_covariates/
-    │   │   ├── tables/                    # Individual panel CSV results
-    │   │   ├── plots/                     # Individual panel PDF plots
+    │   │   ├── tables/                    
+    │   │   ├── plots/                     
     │   │   └── twfe_combined_all_panels.csv
     │   └── with_covariates/
-    │       ├── tables/                    # Individual panel CSV results
-    │       ├── graphs/                    # Individual panel PNG plots
+    │       ├── tables/                    
+    │       ├── graphs/                    
     │       └── twfe_with_cov_combined_all_panels.csv
     └── spillover/                         # Robustness analysis output
         ├── Table1_band_tidy.csv
