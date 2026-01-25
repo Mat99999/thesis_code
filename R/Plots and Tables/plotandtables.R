@@ -295,7 +295,7 @@ library(stringr)
 
 # ---- Paths (using here::here for portability) ---------------------------------
 path_twfe <- here::here("output", "TWFE", "tables")
-path_dcdh <- here::here("output", "dCdH", "dcdhtables")
+path_dcdh <- here::here("Stata", "dcdh_results")
 sector_map_path <- here::here("Data", "Archive_enriched", "sector_group_names.csv")
 plot_path <- here::here("output", "plots")
 table_path <- here::here("output", "tables")
