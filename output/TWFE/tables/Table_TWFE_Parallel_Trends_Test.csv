@@ -1,0 +1,24 @@
+event_time,relative_time,estimate,conf.low,conf.high,funder_abbr,funder_full,sector_code,ad_sector_names,panel_name,is_significant
+-1,-5,0.28286493324563233,-0.21727130210079726,0.7830011685920619,ch,China,110,Education,China - Education,FALSE
+-1,-5,1.1464346583978142,0.6928480441640599,1.6000212726315686,ch,China,120,Health,China - Health,TRUE
+-1,-5,-1.8002803895208972,-2.382995480964383,-1.2175652980774112,ch,China,140,Water Supply and Sanitation,China - Water Supply and Sanitation,TRUE
+-1,-5,-0.2858086747129607,-0.6819859070296891,0.11036855760376774,ch,China,150,Government and Civil Society,China - Government and Civil Society,FALSE
+-1,-5,-2.3354225755944897,-3.24512279144713,-1.4257223597418496,ch,China,160,Other Social Infrastructure and Services,China - Other Social Infrastructure and Services,TRUE
+-1,-5,-0.30604037501884235,-0.7513745291624925,0.13929377912480784,ch,China,210,Transport and Storage,China - Transport and Storage,FALSE
+-1,-5,1.6599350254536287,0.7009274217946126,2.6189426291126447,ch,China,220,Communications,China - Communications,TRUE
+-1,-5,-2.9343131250575745,-3.8577931820091287,-2.0108330681060202,ch,China,230,Energy Generation and Supply,China - Energy Generation and Supply,TRUE
+-1,-5,0.30576333059662675,-0.40225859656622687,1.0137852577594804,ch,China,310,"Agriculture, Forestry and Fishing","China - Agriculture, Forestry and Fishing",FALSE
+-1,-5,0.8833963998504509,-0.6513947723945605,2.418187572095462,ch,China,430,Other Multisector,China - Other Multisector,FALSE
+-1,-5,-3.0001911164769295,-4.484803883301664,-1.5155783496521948,ch,China,700,Emergency Response,China - Emergency Response,TRUE
+-1,-5,0.09484668816129209,-0.22834191080526678,0.418035287127851,wb,World Bank,110,Education,World Bank - Education,FALSE
+-1,-5,0.24327251136424977,-0.007934911898007158,0.4944799346265067,wb,World Bank,120,Health,World Bank - Health,FALSE
+-1,-5,-0.4749720081763084,-0.6841879900094856,-0.2657560263431312,wb,World Bank,140,Water Supply and Sanitation,World Bank - Water Supply and Sanitation,TRUE
+-1,-5,-0.30113265678252527,-0.5468610419549476,-0.055404271610103,wb,World Bank,150,Government and Civil Society,World Bank - Government and Civil Society,TRUE
+-1,-5,-0.16025579811900706,-0.3860884409108353,0.06557684467282113,wb,World Bank,160,Other Social Infrastructure and Services,World Bank - Other Social Infrastructure and Services,FALSE
+-1,-5,-0.8784181999242651,-1.1105411252047501,-0.6462952746437801,wb,World Bank,210,Transport and Storage,World Bank - Transport and Storage,TRUE
+-1,-5,2.4366986651885614,1.590009917109413,3.2833874132677097,wb,World Bank,220,Communications,World Bank - Communications,TRUE
+-1,-5,-0.1641086974101821,-0.4801975559071525,0.15198016108678827,wb,World Bank,230,Energy Generation and Supply,World Bank - Energy Generation and Supply,FALSE
+-1,-5,-0.7699853878034911,-1.216684995095797,-0.32328578051118534,wb,World Bank,240,Banking and Financial Services,World Bank - Banking and Financial Services,TRUE
+-1,-5,-0.417020592463593,-0.6317499074297172,-0.20229127749746892,wb,World Bank,310,"Agriculture, Forestry and Fishing","World Bank - Agriculture, Forestry and Fishing",TRUE
+-1,-5,-0.0698090357543985,-0.3061812414115724,0.16656316990277542,wb,World Bank,320,"Industry, Mining, Construction","World Bank - Industry, Mining, Construction",FALSE
+-1,-5,-0.5618450715353493,-1.0653388337262943,-0.05835130934440447,wb,World Bank,410,General Environmental Protection,World Bank - General Environmental Protection,TRUE
