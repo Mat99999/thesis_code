@@ -294,7 +294,7 @@ library(readr)
 library(stringr)
 
 # ---- Paths (using here::here for portability) ---------------------------------
-path_twfe <- here::here("output", "TWFE", "tables")
+path_twfe <- here::here("output", "TWFE", "without_covariates", "tables")
 path_dcdh <- here::here("Stata", "dcdh_results")
 sector_map_path <- here::here("Data", "Archive_enriched", "sector_group_names.csv")
 plot_path <- here::here("output", "plots")
@@ -849,11 +849,20 @@ ggplot(
 ################################################################################
 # VISUALIZATION: Create the Faceted Plot with Independent Y-Axes
 ################################################################################
-# This code assumes the 'plot_data' dataframe from the previous step is loaded.
 
 # --- Define save path for the main faceted plot ---
 plots_save_path <- here::here("output", "plots")
 dir.create(plots_save_path, showWarnings = FALSE)
+
+# --- Create plot_data from twfe_all with proper column names ---
+plot_data <- twfe_all %>%
+  left_join(sector_map, by = "ad_sector_codes") %>%
+  mutate(
+    funder_full = funder,
+    conf.low = ci_lower,
+    conf.high = ci_upper
+  ) %>%
+  filter(!is.na(event_time), !is.na(estimate))
 
 # --- Create the plot object with the crucial 'scales = "free_y"' addition ---
 faceted_event_study_plot_v2 <- ggplot(plot_data, aes(x = event_time, y = estimate)) +
@@ -1111,230 +1120,242 @@ cat("Successfully saved map plot to:", file.path(save_path, "map_plot_residuals.
 
 ################################################################################
 # TWFE ROBUSTNESS COMPARISON: Final Thesis Version
+# NOTE: This section requires running TWFE_with_covariates.R first to generate
+# the comparison data. Skipping if data not available.
 ################################################################################
 
-# 1. Data Cleaning and Label Standardization
-twfe_comp_clean <- twfe_comp_final %>%
-  # Filter out the specific panel
-  filter(panel_name != "World Bank: Trade and Tourism") %>%
-  # Rename models to match your desired legend text exactly
-  mutate(model = case_when(
-    model == "Baseline (No Covars)" ~ "Baseline (No Covars)",
-    str_detect(model, "Adjusted") ~ "Adjusted (6 Covars)",
-    TRUE ~ model
-  ))
+if (!exists("twfe_comp_final")) {
+  cat("\n[SKIP] TWFE robustness comparison section skipped - run TWFE_with_covariates.R first.\n")
+} else {
+  # 1. Data Cleaning and Label Standardization
+  twfe_comp_clean <- twfe_comp_final %>%
+    # Filter out the specific panel
+    filter(panel_name != "World Bank: Trade and Tourism") %>%
+    # Rename models to match your desired legend text exactly
+    mutate(model = case_when(
+      model == "Baseline (No Covars)" ~ "Baseline (No Covars)",
+      str_detect(model, "Adjusted") ~ "Adjusted (6 Covars)",
+      TRUE ~ model
+    ))
 
-# 2. Generate the Final Plot
-p_twfe_robustness_final <- ggplot(twfe_comp_clean, aes(x = time, y = estimate, color = model, group = model)) +
-  # Reference lines
-  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
-  geom_vline(xintercept = 0.5, linetype = "dashed", color = "gray50") +
+  # 2. Generate the Final Plot
+  p_twfe_robustness_final <- ggplot(twfe_comp_clean, aes(x = time, y = estimate, color = model, group = model)) +
+    # Reference lines
+    geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+    geom_vline(xintercept = 0.5, linetype = "dashed", color = "gray50") +
 
-  # Confidence Intervals (Ribbons)
-  geom_ribbon(aes(ymin = conf_low, ymax = conf_high, fill = model),
-    alpha = 0.15, color = NA
-  ) +
+    # Confidence Intervals (Ribbons)
+    geom_ribbon(aes(ymin = conf_low, ymax = conf_high, fill = model),
+      alpha = 0.15, color = NA
+    ) +
 
-  # Lines and Points
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
+    # Lines and Points
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
 
-  # Faceting: 4 columns for balanced thesis layout
-  facet_wrap(~panel_name, scales = "free_y", ncol = 4) +
+    # Faceting: 4 columns for balanced thesis layout
+    facet_wrap(~panel_name, scales = "free_y", ncol = 4) +
 
-  # Thesis Standard Colors: Light Blue (Baseline) vs. Light Red (Adjusted)
-  # Note: Ensure names here match the mutated names in Step 1
-  scale_color_manual(values = c(
-    "Baseline (No Covars)" = "#3498DB",
-    "Adjusted (6 Covars)" = "#E74C3C"
-  )) +
-  scale_fill_manual(values = c(
-    "Baseline (No Covars)" = "#3498DB",
-    "Adjusted (6 Covars)" = "#E74C3C"
-  )) +
+    # Thesis Standard Colors: Light Blue (Baseline) vs. Light Red (Adjusted)
+    # Note: Ensure names here match the mutated names in Step 1
+    scale_color_manual(values = c(
+      "Baseline (No Covars)" = "#3498DB",
+      "Adjusted (6 Covars)" = "#E74C3C"
+    )) +
+    scale_fill_manual(values = c(
+      "Baseline (No Covars)" = "#3498DB",
+      "Adjusted (6 Covars)" = "#E74C3C"
+    )) +
 
-  # Theme and Styling
-  theme_minimal() +
-  theme(
-    legend.position = "bottom",
-    strip.text = element_text(size = 7, face = "bold"),
-    panel.grid.minor = element_blank(),
-    plot.title = element_text(face = "bold", size = 12),
-    axis.title = element_text(size = 10)
-  ) +
-  labs(
-    title = "TWFE Models Comparison",
-    subtitle = "Baseline (No Covariates) and with Covariates",
-    x = "Event Time",
-    y = "Estimated Effect (IWI)",
-    color = "Model Specification:",
-    fill = "Model Specification:"
+    # Theme and Styling
+    theme_minimal() +
+    theme(
+      legend.position = "bottom",
+      strip.text = element_text(size = 7, face = "bold"),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(face = "bold", size = 12),
+      axis.title = element_text(size = 10)
+    ) +
+    labs(
+      title = "TWFE Models Comparison",
+      subtitle = "Baseline (No Covariates) and with Covariates",
+      x = "Event Time",
+      y = "Estimated Effect (IWI)",
+      color = "Model Specification:",
+      fill = "Model Specification:"
+    )
+
+  # 3. Save the Plot
+  # Creating directory if it doesn't exist just in case
+  if (!dir.exists(here::here("output", "plots"))) dir.create(here::here("output", "plots"), recursive = TRUE)
+
+  ggsave(
+    filename = here::here("output", "plots", "TWFE_Comparison_Final_Thesis.png"),
+    plot = p_twfe_robustness_final,
+    width = 16,
+    height = 12,
+    dpi = 300
   )
 
-# 3. Save the Plot
-# Creating directory if it doesn't exist just in case
-if (!dir.exists(here::here("output", "plots"))) dir.create(here::here("output", "plots"), recursive = TRUE)
+  # Show the plot
+  print(p_twfe_robustness_final)
 
-ggsave(
-  filename = here::here("output", "plots", "TWFE_Comparison_Final_Thesis.png"),
-  plot = p_twfe_robustness_final,
-  width = 16,
-  height = 12,
-  dpi = 300
-)
-
-# Show the plot
-print(p_twfe_robustness_final)
-
-cat("\n[OK] SUCCESS: Final TWFE Comparison plot saved to output/plots/\n")
+  cat("\n[OK] SUCCESS: Final TWFE Comparison plot saved to output/plots/\n")
+} # End of if (exists("twfe_comp_final"))
 
 ################################################################################
 # dCdH ROBUSTNESS COMPARISON: Final Thesis Version
+# NOTE: This section requires dCdH_Full_Stats_Wide.csv from dcdh_with_covariates.R
 ################################################################################
 
 pacman::p_load(tidyverse, janitor, stringr)
 
 # --- 1. LOAD AND PREP ADJUSTED DATA (WIDE -> LONG) ---
 dcdh_adj_path <- here::here("output", "dCdH", "dCdH_Full_Stats_Wide.csv")
-sector_lookup <- read_csv(here::here("Data", "Archive_enriched", "sector_group_names.csv"), show_col_types = FALSE) %>%
-  clean_names()
 
-dcdh_adj_long <- read_csv(dcdh_adj_path, show_col_types = FALSE) %>%
-  clean_names() %>%
-  # Pivot the estimates and CIs
-  pivot_longer(
-    cols = starts_with(c("estimate", "conf_low", "conf_high")),
-    names_to = c(".value", "time_raw"),
-    names_pattern = "(.*)_(t.*)"
-  ) %>%
-  # Map time strings to integers
-  mutate(time = case_when(
-    time_raw == "t_minus_1" ~ -1,
-    time_raw == "t0" ~ 0,
-    time_raw == "t_plus_1" ~ 1,
-    time_raw == "t_plus_2" ~ 2,
-    time_raw == "t_plus_3" ~ 3
-  )) %>%
-  mutate(model = "Adjusted (6 Covars)") %>%
-  select(funder, ad_sector_names, time, estimate, conf_low, conf_high, model)
+if (!file.exists(dcdh_adj_path)) {
+  cat("\n[SKIP] dCdH robustness comparison section skipped - run dcdh_with_covariates.R first.\n")
+} else {
+  sector_lookup <- read_csv(here::here("Data", "Archive_enriched", "sector_group_names.csv"), show_col_types = FALSE) %>%
+    clean_names()
 
-# --- 2. LOAD AND PREP BASELINE DATA (PARSING STRINGS) ---
-baseline_dir <- here::here("Stata", "dcdh_results")
-baseline_files <- list.files(baseline_dir, pattern = "\\.csv$", full.names = TRUE)
-
-dcdh_base_list <- list()
-
-for (f in baseline_files) {
-  # Parse funder and sector code from filename (e.g., DiD_Table_ch_110.csv)
-  fname <- basename(f)
-  m <- str_match(fname, "Table_([a-z]+)_([0-9]+)")
-  funder_abbr <- m[, 2]
-  sector_code <- as.numeric(m[, 3])
-
-  # Read and clean headers
-  df <- read_csv(f, show_col_types = FALSE, skip = 1, col_names = c("label", "est_str", "se_str")) %>%
-    filter(str_detect(label, "Effect|Placebo")) %>%
-    mutate(
-      # Extract numbers from strings like ="0.440***" or ="(0.119)"
-      estimate = as.numeric(str_extract(est_str, "-?[0-9]+\\.[0-9]+")),
-      se = as.numeric(str_extract(se_str, "[0-9]+\\.[0-9]+")),
-      # Calculate CIs (95%)
-      conf_low = estimate - (1.96 * se),
-      conf_high = estimate + (1.96 * se),
-      # Map labels to time
-      time = case_when(
-        str_detect(label, "Placebo_1") ~ -1,
-        str_detect(label, "Effect_1") ~ 1,
-        str_detect(label, "Effect_2") ~ 2,
-        str_detect(label, "Effect_3") ~ 3
-      ),
-      model = "Baseline (No Covars)",
-      funder = ifelse(funder_abbr == "ch", "China", "World Bank"),
-      ad_sector_codes = sector_code
+  dcdh_adj_long <- read_csv(dcdh_adj_path, show_col_types = FALSE) %>%
+    clean_names() %>%
+    # Pivot the estimates and CIs
+    pivot_longer(
+      cols = starts_with(c("estimate", "conf_low", "conf_high")),
+      names_to = c(".value", "time_raw"),
+      names_pattern = "(.*)_(t.*)"
     ) %>%
-    # Add reference period 0
-    add_row(
-      time = 0, estimate = 0, conf_low = 0, conf_high = 0,
-      model = "Baseline (No Covars)", funder = ifelse(funder_abbr == "ch", "China", "World Bank"),
-      ad_sector_codes = sector_code
+    # Map time strings to integers
+    mutate(time = case_when(
+      time_raw == "t_minus_1" ~ -1,
+      time_raw == "t0" ~ 0,
+      time_raw == "t_plus_1" ~ 1,
+      time_raw == "t_plus_2" ~ 2,
+      time_raw == "t_plus_3" ~ 3
+    )) %>%
+    mutate(model = "Adjusted (6 Covars)") %>%
+    select(funder, ad_sector_names, time, estimate, conf_low, conf_high, model)
+
+  # --- 2. LOAD AND PREP BASELINE DATA (PARSING STRINGS) ---
+  baseline_dir <- here::here("Stata", "dcdh_results")
+  baseline_files <- list.files(baseline_dir, pattern = "\\.csv$", full.names = TRUE)
+
+  dcdh_base_list <- list()
+
+  for (f in baseline_files) {
+    # Parse funder and sector code from filename (e.g., DiD_Table_ch_110.csv)
+    fname <- basename(f)
+    m <- str_match(fname, "Table_([a-z]+)_([0-9]+)")
+    funder_abbr <- m[, 2]
+    sector_code <- as.numeric(m[, 3])
+
+    # Read and clean headers
+    df <- read_csv(f, show_col_types = FALSE, skip = 1, col_names = c("label", "est_str", "se_str")) %>%
+      filter(str_detect(label, "Effect|Placebo")) %>%
+      mutate(
+        # Extract numbers from strings like ="0.440***" or ="(0.119)"
+        estimate = as.numeric(str_extract(est_str, "-?[0-9]+\\.[0-9]+")),
+        se = as.numeric(str_extract(se_str, "[0-9]+\\.[0-9]+")),
+        # Calculate CIs (95%)
+        conf_low = estimate - (1.96 * se),
+        conf_high = estimate + (1.96 * se),
+        # Map labels to time
+        time = case_when(
+          str_detect(label, "Placebo_1") ~ -1,
+          str_detect(label, "Effect_1") ~ 1,
+          str_detect(label, "Effect_2") ~ 2,
+          str_detect(label, "Effect_3") ~ 3
+        ),
+        model = "Baseline (No Covars)",
+        funder = ifelse(funder_abbr == "ch", "China", "World Bank"),
+        ad_sector_codes = sector_code
+      ) %>%
+      # Add reference period 0
+      add_row(
+        time = 0, estimate = 0, conf_low = 0, conf_high = 0,
+        model = "Baseline (No Covars)", funder = ifelse(funder_abbr == "ch", "China", "World Bank"),
+        ad_sector_codes = sector_code
+      )
+
+    dcdh_base_list[[fname]] <- df
+  }
+
+  # Merge all baseline and join names
+  dcdh_base_long <- bind_rows(dcdh_base_list) %>%
+    left_join(sector_lookup, by = "ad_sector_codes") %>%
+    select(funder, ad_sector_names, time, estimate, conf_low, conf_high, model)
+
+  # --- 3. MERGE AND CLEAN FINAL DATASET ---
+  dcdh_comp_final <- bind_rows(dcdh_adj_long, dcdh_base_long) %>%
+    # Standardize panel names
+    mutate(panel_name = paste0(funder, ": ", ad_sector_names)) %>%
+    # EXCLUDE the requested panel
+    filter(panel_name != "World Bank: Trade and Tourism") %>%
+    # Filter for the common time window
+    filter(!is.na(time) & !is.na(estimate))
+
+  # --- 4. GENERATE PLOT ---
+  p_dcdh_comparison_final <- ggplot(dcdh_comp_final, aes(x = time, y = estimate, color = model, group = model)) +
+    # Reference Lines
+    geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+    geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+
+    # Error Ribbons
+    geom_ribbon(aes(ymin = conf_low, ymax = conf_high, fill = model),
+      alpha = 0.15, color = NA
+    ) +
+
+    # Lines and Points
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+
+    # Faceting
+    facet_wrap(~panel_name, scales = "free_y", ncol = 4) +
+
+    # Colors: Blue (Old) vs Red (New)
+    scale_color_manual(values = c(
+      "Baseline (No Covars)" = "#3498DB",
+      "Adjusted (6 Covars)" = "#E74C3C"
+    )) +
+    scale_fill_manual(values = c(
+      "Baseline (No Covars)" = "#3498DB",
+      "Adjusted (6 Covars)" = "#E74C3C"
+    )) +
+
+    # Theme and Labels
+    theme_minimal() +
+    theme(
+      legend.position = "bottom",
+      strip.text = element_text(size = 7, face = "bold"),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(face = "bold", size = 12),
+      axis.title = element_text(size = 10)
+    ) +
+    labs(
+      title = "dCdH Models Comparison",
+      subtitle = "Baseline (No Covariates) and with Covariates (Residualized)",
+      x = "Event Time",
+      y = "Estimated Effect (IWI)",
+      color = "Model Specification:",
+      fill = "Model Specification:"
     )
 
-  dcdh_base_list[[fname]] <- df
-}
+  # --- 5. SAVE ---
+  # Create directory if it doesn't exist
+  if (!dir.exists(here::here("output", "plots"))) dir.create(here::here("output", "plots"), recursive = TRUE)
 
-# Merge all baseline and join names
-dcdh_base_long <- bind_rows(dcdh_base_list) %>%
-  left_join(sector_lookup, by = "ad_sector_codes") %>%
-  select(funder, ad_sector_names, time, estimate, conf_low, conf_high, model)
-
-# --- 3. MERGE AND CLEAN FINAL DATASET ---
-dcdh_comp_final <- bind_rows(dcdh_adj_long, dcdh_base_long) %>%
-  # Standardize panel names
-  mutate(panel_name = paste0(funder, ": ", ad_sector_names)) %>%
-  # EXCLUDE the requested panel
-  filter(panel_name != "World Bank: Trade and Tourism") %>%
-  # Filter for the common time window
-  filter(!is.na(time) & !is.na(estimate))
-
-# --- 4. GENERATE PLOT ---
-p_dcdh_comparison_final <- ggplot(dcdh_comp_final, aes(x = time, y = estimate, color = model, group = model)) +
-  # Reference Lines
-  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
-
-  # Error Ribbons
-  geom_ribbon(aes(ymin = conf_low, ymax = conf_high, fill = model),
-    alpha = 0.15, color = NA
-  ) +
-
-  # Lines and Points
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-
-  # Faceting
-  facet_wrap(~panel_name, scales = "free_y", ncol = 4) +
-
-  # Colors: Blue (Old) vs Red (New)
-  scale_color_manual(values = c(
-    "Baseline (No Covars)" = "#3498DB",
-    "Adjusted (6 Covars)" = "#E74C3C"
-  )) +
-  scale_fill_manual(values = c(
-    "Baseline (No Covars)" = "#3498DB",
-    "Adjusted (6 Covars)" = "#E74C3C"
-  )) +
-
-  # Theme and Labels
-  theme_minimal() +
-  theme(
-    legend.position = "bottom",
-    strip.text = element_text(size = 7, face = "bold"),
-    panel.grid.minor = element_blank(),
-    plot.title = element_text(face = "bold", size = 12),
-    axis.title = element_text(size = 10)
-  ) +
-  labs(
-    title = "dCdH Models Comparison",
-    subtitle = "Baseline (No Covariates) and with Covariates (Residualized)",
-    x = "Event Time",
-    y = "Estimated Effect (IWI)",
-    color = "Model Specification:",
-    fill = "Model Specification:"
+  ggsave(
+    filename = here::here("output", "plots", "dCdH_Comparison_Final_Thesis.png"),
+    plot = p_dcdh_comparison_final,
+    width = 16,
+    height = 12,
+    dpi = 300
   )
 
-# --- 5. SAVE ---
-# Create directory if it doesn't exist
-if (!dir.exists(here::here("output", "plots"))) dir.create(here::here("output", "plots"), recursive = TRUE)
+  # Show the plot
+  print(p_dcdh_comparison_final)
 
-ggsave(
-  filename = here::here("output", "plots", "dCdH_Comparison_Final_Thesis.png"),
-  plot = p_dcdh_comparison_final,
-  width = 16,
-  height = 12,
-  dpi = 300
-)
-
-# Show the plot
-print(p_dcdh_comparison_final)
-
-cat("\n[OK] SUCCESS: Final dCdH Comparison plot saved to output/plots/\n")
+  cat("\n[OK] SUCCESS: Final dCdH Comparison plot saved to output/plots/\n")
+} # End of if (file.exists(dcdh_adj_path))

@@ -1,0 +1,39 @@
+Parallel Trends Diagnostic — Pre-treatment (t = -1)
+====================================================
+
+Summary statistics by estimator:
+# A tibble: 2 × 5
+  method mean_pre sd_pre share_sig n_panels
+  <chr>     <dbl>  <dbl>     <dbl>    <int>
+1 TWFE     -0.322  1.30      0.565       23
+2 dCdH     -0.552  0.581     0.696       23
+
+
+TWFE mean test:
+
+	One Sample t-test
+
+data:  pretrend$estimate[pretrend$method == "TWFE"]
+t = -1.1852, df = 22, p-value = 0.2486
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ -0.8854932  0.2414592
+sample estimates:
+mean of x 
+-0.322017 
+
+
+
+dCdH mean test:
+
+	One Sample t-test
+
+data:  pretrend$estimate[pretrend$method == "dCdH"]
+t = -4.5547, df = 22, p-value = 0.0001556
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ -0.8030748 -0.3005644
+sample estimates:
+ mean of x 
+-0.5518196 
+
